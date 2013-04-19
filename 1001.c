@@ -19,8 +19,10 @@ int Alphacode ( char digits[] )
 
 	while ( i < length )
 	{
-		if (digits[i] == '0' || digits[i-1] == '0') 
+		if (digits[i] == '0') 
 			sum[i] = sum[i-2];
+		else if ( digits[i-1] == '0' )
+			sum[i] = sum[i-1];	
 		else if ( (digits[i]-'0' + (digits[i-1]-'0')*10) <= 26 )
 			sum[i] = sum[i-1] + sum[i-2];
 		else
