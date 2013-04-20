@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string.h>
 #define MAX_BUF 256
 typedef unsigned long size_t;
@@ -15,28 +16,13 @@ void qsort_kernel ( void* base, size_t n, size_t size, int (*cmp)(const void*, c
 		char* qp = qj;
 		while ( i<j )
 		{
-			printf ("\n----BEGIN-----Array qsorting---------\n");
-			printf("i:%d j:%d n:%d\n", i , j, n );
-///////////////////////////////////////////////////////////////////////////////////////
-			char* result1 = base;
-			{
-				int k;
-				for ( k=0 ; k<n; k++ )
-				{
-					print( &(result1[k*size]) );
-				}
-				printf("\n");
-			}
 			/* Find the sub-array that worth sorting */
 			while ( i<j && (*cmp)( qi, qp ) <=0 )
 				++i, qi += size;
 			while ( i<j && (*cmp)( qp, qj ) <=0 )
 				--j, qj -= size;
-			printf("i:%d j:%d n:%d\n", i , j, n );
-//			printf("i:%d\tj:%d\n",i,j);
 			if ( i<j )
 			{
-				printf("in\n");
 				char buf[MAX_BUF];
 				char *q1;
 				char *q2;
@@ -52,7 +38,6 @@ void qsort_kernel ( void* base, size_t n, size_t size, int (*cmp)(const void*, c
 					memcpy ( q2, buf, m );
 				}
 				++i, qi += size;
-//				printf("%d\n", i );
 			}
 		}
 		if ( qi != qp )
@@ -62,7 +47,7 @@ void qsort_kernel ( void* base, size_t n, size_t size, int (*cmp)(const void*, c
 			char *q2; 
 			size_t m, ms;
 			q1 = qi;
-			q2 = qj;
+			q2 = qp;
 			for ( ms=size ; 0 < ms ; ms -=m , q1 += m , q2 -= m )
 			{
 					m = ms < sizeof (buf)? ms : sizeof(buf);
@@ -72,19 +57,6 @@ void qsort_kernel ( void* base, size_t n, size_t size, int (*cmp)(const void*, c
 			}
 		}
 		j = n - i - 1, qi += size;
-		printf("i:%d j:%d n:%d\n", i , j, n );
-///////////////////////////////////////////////////////////////////////////////////////
-	char* result = base;
-	{
-		int k;
-		for ( k=0 ; k<n; k++ )
-		{
-			print( &(result[k*size]) );
-		}
-		printf("\n");
-	}
-		printf ("----END-----Array qsorting---------\n\n");
-///////////////////////////////////////////////////////////////////////////////////////
 		if ( j<i ){
 			if ( 1<j )
 				qsort_kernel ( qi, j , size, cmp, print );	
@@ -133,15 +105,19 @@ void print ( const void* i )
 
 int cmp ( const void *a, const void* b )
 {
-//	printf ( "%d,%d\n",*(int*)a, *(int*)b );
 	return ( *(int*)a - *(int*)b );
 }
 
 int main()
 {
-	int a[] = {1,2,3,4,9,8,7,6,5,5};
-//	printf("%d %d %d\n", sizeof(long int),sizeof(int), sizeof(char) );
-	sort ( a, 10, sizeof(int), cmp, print );
+	int a[1000];
+	srand(0);
+	{
+		int i=0;
+		for ( i=0 ; i<1000 ; i++ )
+			a[i] = rand()%1000;
+	}	
+	sort ( a, 1000, sizeof(int), cmp, print );
 	
 	return 0;
 }
